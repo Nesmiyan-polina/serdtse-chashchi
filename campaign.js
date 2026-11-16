@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ThicketCampaign=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   const SAVE_KEY='thicket-campaign-90d-v1',INTRO_KEY='thicket-campaign-intro-v1';
-  const BALANCE={version:1,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
+  const BALANCE={version:2,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
   const finite=(v,fallback=0)=>Number.isFinite(v)?Math.min(BALANCE.maxNumber,Math.max(0,v)):fallback;
   const PRODUCERS=[
     {id:'moss',name:'Светящийся мох',desc:'Первый свет под корнями',base:15,rate:1,icon:'leaf',unlock:null},
@@ -18,13 +18,13 @@
     {id:'moth',name:'Лунный мотылёк',type:'Дух света',icon:'moth',producer:'moss',multiplier:2,desc:'Помнит свет, которого ты ещё не видела.'},
     {id:'mossling',name:'Моховик',type:'Хранитель троп',icon:'mushroom',producer:'mushrooms',multiplier:2,desc:'В его маленьком саду хранятся дороги леса.'},
     {id:'snail',name:'Янтарная улитка',type:'Хранительница росы',icon:'leaf',producer:'mushrooms',multiplier:2,desc:'Оставляет на грибах росу из прошлого утра.'},
-    {id:'fox',name:'Стеклянная лисица',type:'Спутница алхимика',icon:'fox',producer:'roots',multiplier:2,desc:'Показывает окно, за которым остановилось время.'},
-    {id:'owl',name:'Чернильная сова',type:'Библиотекарь',icon:'book',producer:'inkwell',multiplier:2,desc:'Её перья записывают забытые имена.'},
-    {id:'salamander',name:'Угольная саламандра',type:'Хранительница огня',icon:'flask',producer:'cauldron',multiplier:2,desc:'Поддерживает огонь, который не обжигает руки.'},
-    {id:'bat',name:'Хрустальная крылатка',type:'Слушательница света',icon:'moth',producer:'crystals',multiplier:2,desc:'Находит растущие кристаллы по их песне.'},
-    {id:'mirrorcat',name:'Зеркальный кот',type:'Страж отражений',icon:'fox',producer:'inkwell',multiplier:3,desc:'Возвращает в книги страницы из других отражений.'},
+    {id:'fox',name:'Рыжая лисица',type:'Проводница к башне',icon:'fox',producer:'roots',multiplier:2,desc:'Находит безопасную тропу к башне в самой густой темноте.'},
+    {id:'owl',name:'Чернильная сова',type:'Ночная разведчица',icon:'book',producer:'roots',multiplier:2,desc:'С высоты видит путь, который скрыт между деревьями.'},
+    {id:'salamander',name:'Угольная саламандра',type:'Хранительница огня',icon:'flask',producer:'mushrooms',multiplier:2,desc:'Согревает грибной круг и никого не обжигает.'},
+    {id:'bat',name:'Сумеречная крылатка',type:'Слушательница леса',icon:'moth',producer:'moss',multiplier:2,desc:'Слышит, где под землёй ещё живёт свет.'},
+    {id:'mirrorcat',name:'Теневой кот',type:'Страж страниц',icon:'fox',producer:'inkwell',multiplier:3,desc:'Находит потерянные страницы в тенях башни.'},
     {id:'phoenix',name:'Пепельный феникс',type:'Сердце башни',icon:'spark',producer:'cauldron',multiplier:3,desc:'Собирает рассеянное тепло в новое пламя.'},
-    {id:'deer',name:'Рогатый страж',type:'Память леса',icon:'deer',producer:'roots',multiplier:3,desc:'В его рогах прорастают ветви прошлых эпох.'},
+    {id:'deer',name:'Лесной олень',type:'Проводник чащи',icon:'deer',producer:'roots',multiplier:3,desc:'Уверенно ведёт спутников сквозь ночной лес.'},
     {id:'otter',name:'Звёздная выдра',type:'Хранительница колодца',icon:'portal',producer:'well',multiplier:2,desc:'Вытаскивает из воды отражения исчезнувших созвездий.'},
     {id:'raven',name:'Серебряный ворон',type:'Садовник сумерек',icon:'moth',producer:'orchards',multiplier:2,desc:'Прячет семена там, где однажды появится свет.'},
     {id:'dragon',name:'Медный дракон',type:'Мастер кузниц',icon:'flask',producer:'forges',multiplier:2,desc:'Выдувает из пламени линзы для маяка.'},
@@ -35,16 +35,16 @@
   const NODES=[
     node('light','Тихое сияние',150,null,'mushrooms','moth'),
     node('roots','Зов корней',700,'light','moss10',null,{desc:'Каждое касание приносит дополнительную ману.'}),
-    node('spores','Грибные сны',5000,'roots','rootcall','mossling'),
-    node('breath','Дыхание леса',70000,'spores','root10',null,{desc:'Все источники производят на 25% больше маны.'}),
-    node('dew','Янтарная роса',600000,'breath','breath','snail'),
-    node('tower','Окно башни',2e7,'dew','firstspring','fox'),
-    node('owl','Перо библиотекаря',2e7,'tower','inkwell','owl'),
-    node('salamander','Тихий огонь',2e8,'owl','cauldron','salamander'),
-    node('bat','Песня кристалла',3e9,'salamander','crystals','bat'),
-    node('mirrorcat','Зеркальные страницы',1e10,'bat','bat','mirrorcat'),
+    node('spores','Грибные сны',50000,'roots','rootcall','mossling'),
+    node('breath','Дыхание леса',250000,'spores','root10',null,{desc:'Все источники производят на 25% больше маны.'}),
+    node('dew','Янтарная роса',1000000,'breath','breath','snail'),
+    node('owl','Взгляд совы',3000000,'dew','firstspring','owl'),
+    node('salamander','Тихий огонь',8000000,'owl','owl','salamander'),
+    node('bat','Песня сумерек',20000000,'salamander','salamander','bat'),
+    node('guardian','Доверие оленя',30000000,'bat','bat','deer'),
+    node('tower','Окно башни',20000000,'guardian','guardian','fox'),
+    node('mirrorcat','Теневые страницы',1e10,'tower','crystals','mirrorcat'),
     node('towerheart','Сердце башни',4e10,'mirrorcat','mirrorcat','phoenix'),
-    node('guardian','Клятва чащи',2e11,'towerheart','observatory','deer'),
     node('otter','Отражения звёзд',8e11,'guardian','well','otter'),
     node('raven','Серебряные семена',3e12,'otter','orchards','raven'),
     node('dragon','Дыхание меди',3e13,'raven','forges','dragon'),
@@ -63,21 +63,21 @@
     step('root10','Лес','Укрепить подземную тропу','producer',{target:'roots',level:10,after:'Корни удерживают путь, который раньше исчезал в тумане.'}),
     step('breath','Лес','Вернуть лесу дыхание','research',{target:'breath',after:'Все источники начинают работать в одном ритме.'}),
     step('firstspring','Лес','Собрать янтарную росу','research',{target:'dew',after:'Улитка хранит каплю рассвета. Значит, когда-то утро существовало.'}),
-    step('tower','Башня','Зажечь окно башни','research',{target:'tower',after:'Стеклянная лисица показывает разбитые часы. Мир возвращается к началу каждой эпохи.'}),
+    step('owl','Лес','Встретить чернильную сову','research',{target:'owl',after:'Сова показывает тропу сквозь ночной лес.'}),
+    step('salamander','Лес','Подружиться с саламандрой','research',{target:'salamander',after:'Саламандра согревает грибной круг.'}),
+    step('bat','Лес','Услышать сумеречную крылатку','research',{target:'bat',after:'Крылатка находит слабые огоньки под землёй.'}),
+    step('guardian','Лес','Встретить лесного оленя','research',{target:'guardian',after:'Олень выводит тебя к старой башне.'}),
+    step('tower','Башня','Зажечь окно башни','research',{target:'tower',after:'Рыжая лисица находит разбитые часы. Мир возвращается к началу каждой эпохи.'}),
     step('firstEra','Башня','Пройти сквозь смену эпохи','rebirth',{after:'Ты снова в лесу. Встреченные существа узнают тебя. Открылись порталы.'}),
     step('archive','Башня','Восстановить архив','story',{cost:1e7,research:['tower'],after:'В архиве найден чертёж Маяка рассвета и первые живые чернила.'}),
     step('inkwell','Башня','Пробудить живые чернила','producer',{target:'inkwell',after:'На пустых страницах появляются имена жителей королевства.'}),
-    step('owl','Башня','Найти библиотекаря','research',{target:'owl',after:'Чернильная сова собирает разлетевшиеся страницы.'}),
     step('ink10','Башня','Собрать первую книгу','producer',{target:'inkwell',level:3,after:'Третий уровень живых чернил завершает книгу. В ней найден рецепт безопасного огня.'}),
     step('cauldron','Башня','Зажечь лунный котёл','producer',{target:'cauldron',after:'Тихий огонь даёт башне новый источник маны.'}),
-    step('salamander','Башня','Подружиться с саламандрой','research',{target:'salamander',after:'Хранительница огня согревает нижние залы.'}),
     step('alembic','Башня','Собрать световой перегонник','story',{cost:1e9,research:['salamander'],after:'В перегоннике появляется семя кристального сада.'}),
     step('crystals','Башня','Вырастить кристальный сад','producer',{target:'crystals',after:'Кристаллы хранят свет без огня.'}),
-    step('bat','Башня','Услышать песню кристалла','research',{target:'bat',after:'Крылатка находит самые чистые кристаллы для будущей линзы.'}),
     step('mirrorcat','Башня','Вернуть зеркальные страницы','research',{target:'mirrorcat',after:'Кот приносит чертёж маяка из отражения разрушенной башни.'}),
     step('towerheart','Башня','Разбудить сердце башни','research',{target:'towerheart',after:'Пепельный феникс возвращает тепло в часы.'}),
     step('observatory','Башня','Открыть обсерваторию','story',{cost:1e11,research:['towerheart'],after:'Среди неподвижных звёзд обнаружен путь к королевству.'}),
-    step('guardian','Королевство','Заручиться клятвой стража','research',{target:'guardian',after:'Рогатый страж соглашается вывести тебя за границу повторяющегося леса.'}),
     step('road','Королевство','Зажечь путевые огни','story',{cost:4e11,research:['guardian'],after:'За туманом проступают стены королевства и погасший маяк.'}),
     step('well','Королевство','Открыть колодец звёзд','producer',{target:'well',after:'В воде отражается небо до заклятия.'}),
     step('otter','Королевство','Вернуть отражения звёзд','research',{target:'otter',after:'Звёздная выдра собирает потерянные созвездия.'}),
@@ -90,7 +90,7 @@
     step('crane','Королевство','Соединить лучи света','research',{target:'crane',after:'Журавль связывает кристальный сад с маяком.'}),
     step('unicorn','Королевство','Принять клятву источника','research',{target:'unicorn',after:'Единорог обещает удержать поток света на границе эпох.'}),
     step('council','Маяк','Собрать хранителей','story',{cost:6e14,research:['unicorn'],collection:CREATURES.map(c=>c.id),after:'Пятнадцать спутников готовы помочь. Каждый принёс часть будущего утра.'}),
-    step('foundation','Маяк','Поднять основание маяка','story',{cost:1e15,research:['tower','guardian'],after:'Лисица читает чертёж, моховик укрепляет землю. Основание выдерживает течение магии.'}),
+    step('foundation','Маяк','Поднять основание маяка','story',{cost:1e15,research:['tower','guardian'],after:'Лисица показывает место, моховик укрепляет землю. Основание выдерживает течение магии.'}),
     step('lanterns','Маяк','Зажечь кольцо фонарей','story',{cost:2e15,levels:{forges:10},after:'Фонари удерживают свет вокруг башни маяка.'}),
     step('prism','Маяк','Собрать рассветную призму','story',{cost:4e15,research:['crane','dragon'],after:'Призма собирает девять потоков маны в один луч.'}),
     step('oath','Маяк','Связать свет с памятью','story',{cost:7e15,memory:1,research:['unicorn'],after:'Память сохраняет луч на границе эпох. Остался последний шаг.'}),
@@ -100,7 +100,7 @@
   // Fixed economy data calibrated by shared-core simulations; no elapsed-time unlock conditions.
   const TUNING={
     producers:{inkwell:{base:560011150651,rate:1175234},cauldron:{base:119301193108581,rate:298051815},crystals:{base:2285661633784636200,rate:5040747819253},well:{base:6.313773175689833e24,rate:13560308340684780000},orchards:{base:5.334067189676753e26,rate:1.548001434000294e21},forges:{base:1.3247935720262987e30,rate:2.1201283541225154e24}},
-    nodes:{spores:4593198,breath:94722073,dew:238877958,tower:3319898879,owl:9459636111423,salamander:2360404320056608,bat:36212395724759620000,mirrorcat:432270613691963150000,towerheart:8.326289748880975e21,guardian:1.9082116669761437e23,otter:9.430203625657333e25,raven:1.1395063014916779e28,dragon:8.282230181535514e30,crane:1.3065931878266145e32,unicorn:4.74891911917858e32},
+    nodes:{mirrorcat:432270613691963150000,towerheart:8.326289748880975e21,otter:9.430203625657333e25,raven:1.1395063014916779e28,dragon:8.282230181535514e30,crane:1.3065931878266145e32,unicorn:4.74891911917858e32},
     story:{archive:163618342976,alembic:93692122698603780,observatory:6.069402259937787e22,road:2.0155176785107594e24,springs:7.698611677189128e28,council:6.302722740605403e33,foundation:4.93026644161494e34,lanterns:5.8401972499347186e35,prism:3.6812705148841573e36,oath:1.0211291723185451e37,dawn:1.0601051097340625e38}
   };
   for(const p of PRODUCERS)if(TUNING.producers[p.id])Object.assign(p,TUNING.producers[p.id]);
@@ -128,7 +128,12 @@
     s.research=[...new Set((raw.research||[]).filter(id=>NODES.some(n=>n.id===id)))];s.collection=[...new Set((raw.collection||[]).filter(id=>CREATURES.some(c=>c.id===id)))];
     s.story={completed:[...new Set((raw.story?.completed||[]).filter(id=>STORY_STEPS.some(st=>st.id===id)))],history:[...new Set((raw.story?.history||[]).filter(id=>NODES.some(n=>n.id===id)))],legacy:false};
     s.events=Object.fromEntries(THEMES.map(t=>{const e=raw.events?.[t.id]||{};return[t.id,{...e,progress:Math.min(9,Math.floor(finite(e.progress))),badges:[0,1,2].map(i=>Math.floor(finite(e.badges?.[i]))),activeBonus:finite(e.activeBonus),finished:!!e.finished,round:Math.max(1,Math.floor(finite(e.round,1)))}];}));
-    if(raw.eventSchedule&&typeof raw.eventSchedule==='object')s.eventSchedule={...raw.eventSchedule};return syncStory(s);
+    if(raw.eventSchedule&&typeof raw.eventSchedule==='object')s.eventSchedule={...raw.eventSchedule};
+    if((raw.balanceVersion||1)<2&&s.story.completed.includes('firstEra')){
+      for(const id of ['owl','salamander','bat','guardian'])if(!s.story.completed.includes(id))s.story.completed.push(id);
+      for(const id of ['owl','salamander','bat','deer'])if(!s.collection.includes(id))s.collection.push(id);
+    }
+    s.balanceVersion=BALANCE.version;return syncStory(s);
   }
   function unlocks(s){return{producers:PRODUCERS.filter(p=>!p.unlock||hasStep(s,p.unlock)).map(p=>p.id),tree:hasStep(s,'mushrooms'),creatures:hasStep(s,'moth'),bulkBuy:hasStep(s,'moth'),training:hasStep(s,'moth'),portals:hasStep(s,'firstEra'),rebirth:hasStep(s,'tower')};}
   const visibleProducers=s=>PRODUCERS.filter(p=>unlocks(s).producers.includes(p.id));
