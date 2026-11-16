@@ -103,9 +103,11 @@
     nodes:{mirrorcat:432270613691963150000,towerheart:8.326289748880975e21,otter:9.430203625657333e25,raven:1.1395063014916779e28,dragon:8.282230181535514e30,crane:1.3065931878266145e32,unicorn:4.74891911917858e32},
     story:{archive:163618342976,alembic:93692122698603780,observatory:6.069402259937787e22,road:2.0155176785107594e24,springs:7.698611677189128e28,council:6.302722740605403e33,foundation:4.93026644161494e34,lanterns:5.8401972499347186e35,prism:3.6812705148841573e36,oath:1.0211291723185451e37,dawn:1.0601051097340625e38}
   };
-  for(const p of PRODUCERS)if(TUNING.producers[p.id])Object.assign(p,TUNING.producers[p.id]);
-  for(const n of NODES){if(TUNING.nodes[n.id])n.cost=TUNING.nodes[n.id];n.chapter=STORY_STEPS.find(st=>st.target===n.id&&st.type==='research')?.chapter||'Лес';}
-  for(const st of STORY_STEPS)if(TUNING.story[st.id])st.cost=TUNING.story[st.id];
+  // Later chapters are priced for repeated eras; the first forest cycle keeps its own curve.
+  const LATE_COST_SCALE=.08,EARLY_NODES=new Set(['light','roots','spores','breath','dew','owl','salamander','bat','guardian','tower']);
+  for(const p of PRODUCERS){if(TUNING.producers[p.id])Object.assign(p,TUNING.producers[p.id]);if(['inkwell','cauldron','crystals','well','orchards','forges'].includes(p.id))p.base*=LATE_COST_SCALE;}
+  for(const n of NODES){if(TUNING.nodes[n.id])n.cost=TUNING.nodes[n.id];if(!EARLY_NODES.has(n.id))n.cost*=LATE_COST_SCALE;n.chapter=STORY_STEPS.find(st=>st.target===n.id&&st.type==='research')?.chapter||'Лес';}
+  for(const st of STORY_STEPS){if(TUNING.story[st.id])st.cost=TUNING.story[st.id];if(st.type==='story')st.cost*=LATE_COST_SCALE;}
   const eventState=()=>({progress:0,badges:[0,0,0],activeBonus:0,finished:false,round:1});
   const fresh=(now=0)=>({version:3,balanceVersion:BALANCE.version,mana:0,totalEarned:0,lifetimeEarned:0,memory:0,memoryClaimed:0,era:1,producers:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),training:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),research:[],collection:[],story:{completed:[],history:[],legacy:false},events:Object.fromEntries(THEMES.map(t=>[t.id,eventState()])),lastSaved:finite(now)});
   const hasStep=(s,id)=>s.story.completed.includes(id),producerById=id=>typeof id==='string'?PRODUCERS.find(p=>p.id===id):id;
