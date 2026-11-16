@@ -1,0 +1,47 @@
+.evlab{color:#ede7d8;background:#101c17;border:1px solid #314536;border-radius:24px;padding:clamp(20px,4vw,36px);font-family:inherit;overflow:hidden}
+.evlab *{box-sizing:border-box}
+.evlab button,.evlab input{font:inherit}
+.evlab button{cursor:pointer;min-height:44px;touch-action:manipulation}
+.evlab button:focus-visible,.evlab input:focus-visible{outline:3px solid #ede7d8;outline-offset:4px}
+.evlab-tabs{display:flex;gap:6px;padding:5px;border:1px solid #314536;border-radius:14px;background:#0b1511;margin-bottom:26px}
+.evlab-tab{flex:1;border:0;border-radius:9px;background:transparent;color:#a7b2a5;padding:10px 8px;min-width:0;font-size:14px}
+.evlab-tab[aria-pressed=true]{background:#294034;color:#f5ead5;box-shadow:inset 0 0 0 1px #53654a}
+.evlab-tab:hover{color:#ede7d8}
+.evlab-heading{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.evlab-eyebrow{color:#c8ab71;font-size:11px;letter-spacing:.13em;text-transform:uppercase;margin:0 0 8px}
+.evlab-heading h3{font-family:Georgia,'Times New Roman',serif;font-size:clamp(23px,4vw,34px);font-weight:400;line-height:1.16;margin:0;color:#ede7d8}
+.evlab-theme-mark{font-size:48px;line-height:1;color:#c8ab71;flex-shrink:0}
+.evlab-description{font-size:15px;line-height:1.65;color:#a7b2a5;max-width:55ch;margin:14px 0 26px}
+.evlab-slider-label{display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:14px}
+.evlab-slider-label output{font-variant-numeric:tabular-nums;color:#d9bf87;font-weight:600}
+.evlab-range{display:block;width:100%;height:44px;margin:4px 0 0;accent-color:#c8ab71;cursor:pointer;background:transparent}
+.evlab-range:disabled{cursor:default;opacity:.55}
+.evlab-track{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:5px;margin:0 0 6px}
+.evlab-step{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:9px 0 5px;border-radius:7px;color:#99a596;background:#15251c;border:1px solid #314536;font-size:13px;font-variant-numeric:tabular-nums}
+.evlab-step small{font-size:10px;line-height:1}
+.evlab-step.is-badge{border-color:#756440;color:#d7bc83}
+.evlab-step.is-reached{background:#314d37;color:#f2ecd8;border-color:#7a9169}
+.evlab-step.is-reached.is-badge{background:#c8ab71;color:#101c17;border-color:#e6d4ae}
+.evlab-help{font-size:12px;line-height:1.6;color:#a7b2a5;margin:10px 0 26px;min-height:38px}
+.evlab-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;border-top:1px solid #314536;border-bottom:1px solid #314536;padding:22px 0;margin:0 0 24px}
+.evlab-stats>div{display:flex;flex-direction:column;align-items:flex-start}
+.evlab-stats span{font-size:12px;line-height:1.5;min-height:36px;color:#d8ddcf}
+.evlab-stats strong{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(25px,4vw,38px);line-height:1.2;margin:5px 0 9px;white-space:nowrap}
+.evlab-stats small{font-size:11px;line-height:1.5;color:#a7b2a5}
+.evlab-next-stat strong{color:#d9bf87}
+.evlab-badges{display:grid;gap:15px;margin-bottom:26px}
+.evlab-badge{display:flex;align-items:center;gap:14px}
+.evlab-medal{flex:none;display:flex;align-items:center;justify-content:center;width:42px;height:46px;color:#9fa98d;border:1px solid #51614b;border-radius:22px 22px 13px 13px;font-family:Georgia,serif;background:#16261b;font-size:18px}
+.evlab-badge.is-unlocked .evlab-medal{color:#ead5a4;border-color:#c8ab71;background:#393724;box-shadow:0 0 20px #c8ab710d}
+.evlab-badge b{font-size:14px;font-weight:500;display:block;line-height:1.5}
+.evlab-badge span:not(.evlab-medal){display:block;font-size:12px;line-height:1.6;color:#c0c8b9}
+.evlab-badge small{display:block;font-size:11px;line-height:1.6;color:#a7b2a5}
+.evlab-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.evlab-primary{border:1px solid #c8ab71;border-radius:10px;background:#c8ab71;color:#101c17;padding:13px 20px;font-size:14px;font-weight:600;flex:1}
+.evlab-primary:hover{background:#debf80}
+.evlab-reset{border:1px solid #42523d;border-radius:10px;background:transparent;color:#c6cebe;padding:13px 16px;font-size:13px}
+.evlab-reset:hover{border-color:#a7b2a5;color:#ede7d8}
+.evlab-status{font-size:13px;line-height:1.65;color:#d2c09b;min-height:44px;margin:17px 0 0}
+.evlab-disclaimer{font-size:11px;line-height:1.7;color:#a7b2a5;margin:16px 0 0;padding-top:16px;border-top:1px solid #314536}
+@media(max-width:440px){.evlab{padding:19px 17px;border-radius:18px}.evlab-tabs{gap:3px}.evlab-tab{font-size:12px;padding:10px 4px}.evlab-heading h3{font-size:25px}.evlab-theme-mark{font-size:38px}.evlab-stats{gap:10px}.evlab-stats span{font-size:11px;min-height:48px}.evlab-stats strong{font-size:28px}.evlab-stats small{font-size:10px}.evlab-track{gap:4px}.evlab-actions{display:grid;grid-template-columns:1fr}.evlab-reset{width:100%}.evlab-description{font-size:14px}.evlab-slider-label{font-size:13px}}
+@media(prefers-reduced-motion:reduce){.evlab *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
