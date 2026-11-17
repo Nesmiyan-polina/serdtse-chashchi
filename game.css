@@ -163,3 +163,6 @@
 .buy-button .buy-cost:after{content:" ✧";color:#ead094}
 .buy-button:disabled{color:#d5c8a0;background:#303b2c;border-color:#59674e}
 @media(max-width:360px){.goal-desc{font-size:11px}.producer-copy strong{font-size:15px}.producer-copy small{font-size:10px}.buy-button .buy-quantity{font-size:10px}}
+.nav-button.discovery-ready{color:#ead99f;background:radial-gradient(circle at 50% 42%,#9eb75355,transparent 66%);border-radius:14px}
+.nav-button.discovery-ready .icon{color:#f2df9d;filter:drop-shadow(0 0 6px #d9dc83) drop-shadow(0 0 13px #88b25f);animation:tree-awaken 2.2s ease-in-out infinite}
+@keyframes tree-awaken{0%,100%{filter:drop-shadow(0 0 4px #a5bf66)}50%{filter:drop-shadow(0 0 9px #f1dc99) drop-shadow(0 0 17px #85b65c)}}
