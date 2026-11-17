@@ -1,0 +1,16 @@
+.story-overlay{position:absolute;inset:0;z-index:60;display:flex;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;background:#08120f;color:#f6edd9}
+.story-overlay[hidden]{display:none}
+.story-scene-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+.story-scene-shade{position:absolute;inset:0;background:linear-gradient(180deg,#07100b33 0%,transparent 24%,#07120e22 43%,#07120ec4 65%,#07120ef5 85%,#07120e 100%)}
+.story-scene-copy{position:relative;z-index:1;margin-top:auto;padding:28px 28px calc(30px + env(safe-area-inset-bottom));text-shadow:0 2px 10px #000b}
+.story-scene-chapter{font:700 10px/1.4 system-ui,sans-serif;letter-spacing:2.2px;color:#e5c987;margin-bottom:12px}
+.story-scene-copy h2{font:normal clamp(31px,9vw,42px)/1.05 Georgia,'Times New Roman',serif;letter-spacing:-.5px;margin-bottom:16px;max-width:380px}
+.story-scene-copy>p:not(.story-scene-chapter){font:14px/1.55 system-ui,sans-serif;max-width:390px}
+.story-scene-purpose{border-left:2px solid #d6bc80;padding-left:13px;margin-top:15px;color:#e6dcc1}
+#story-continue{display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%;min-height:52px;margin-top:25px;padding:12px 18px;border:1px solid #d9c58d;border-radius:11px;background:#d7c18b;color:#172219;font:700 14px/1.2 system-ui,sans-serif;text-shadow:none}
+#story-continue span{font-size:22px;font-weight:400}
+#story-continue:focus-visible{outline:2px solid #fff4c9;outline-offset:3px}
+@media(max-width:360px){.story-scene-copy{padding:20px 22px calc(23px + env(safe-area-inset-bottom))}.story-scene-copy h2{font-size:30px}.story-scene-copy>p:not(.story-scene-chapter){font-size:13px;line-height:1.45}#story-continue{margin-top:18px}}
+.story-replay-list{display:grid;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid #526047}
+.story-replay-list h3{font-size:22px}.story-replay-list p{font-size:11px;color:#a9b69e}
+.story-replay-list button{display:flex;justify-content:space-between;align-items:center;min-height:44px;padding:9px 12px;border:1px solid #596644;border-radius:9px;background:#243729;text-align:left;color:#e6d29f}

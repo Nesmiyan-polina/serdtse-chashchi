@@ -1,7 +1,7 @@
 (function(root,factory){const api=factory();if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ThicketCampaign=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   const SAVE_KEY='thicket-campaign-90d-v1',INTRO_KEY='thicket-campaign-intro-v1';
-  const BALANCE={version:5,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,knownSourceDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
+  const BALANCE={version:6,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,knownSourceDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
   const finite=(v,fallback=0)=>Number.isFinite(v)?Math.min(BALANCE.maxNumber,Math.max(0,v)):fallback;
   const PRODUCERS=[
     {id:'moss',name:'Светящийся мох',desc:'Первый свет под корнями',base:15,rate:5,icon:'leaf',unlock:null},
@@ -104,12 +104,12 @@
     story:{archive:163618342976,alembic:93692122698603780,observatory:6.069402259937787e22,road:2.0155176785107594e24,springs:7.698611677189128e28,council:6.302722740605403e33,foundation:4.93026644161494e34,lanterns:5.8401972499347186e35,prism:3.6812705148841573e36,oath:1.0211291723185451e37,dawn:1.0601051097340625e38}
   };
   // Later chapters are priced for repeated eras; the first forest cycle keeps its own curve.
-  const LATE_COST_SCALE=.03,FOREST_STORY=new Set(['moss10','root10']),EARLY_NODES=new Set(['light','roots','spores','breath','dew','owl','salamander','bat','guardian','tower']);
+  const LATE_COST_SCALE=.12,FOREST_STORY=new Set(['moss10','root10']),EARLY_NODES=new Set(['light','roots','spores','breath','dew','owl','salamander','bat','guardian','tower']),EARLY_PACE_NODES=new Set(['spores','breath','dew','owl','salamander','bat','guardian','tower']);
   for(const p of PRODUCERS){if(TUNING.producers[p.id])Object.assign(p,TUNING.producers[p.id]);if(['inkwell','cauldron','crystals','well','orchards','forges'].includes(p.id))p.base*=LATE_COST_SCALE;}
-  for(const n of NODES){if(TUNING.nodes[n.id])n.cost=TUNING.nodes[n.id];if(!EARLY_NODES.has(n.id))n.cost*=LATE_COST_SCALE;n.chapter=STORY_STEPS.find(st=>st.target===n.id&&st.type==='research')?.chapter||'Лес';}
+  for(const n of NODES){if(TUNING.nodes[n.id])n.cost=TUNING.nodes[n.id];if(EARLY_PACE_NODES.has(n.id))n.cost*=8;if(!EARLY_NODES.has(n.id))n.cost*=LATE_COST_SCALE;n.chapter=STORY_STEPS.find(st=>st.target===n.id&&st.type==='research')?.chapter||'Лес';}
   for(const st of STORY_STEPS){if(TUNING.story[st.id])st.cost=TUNING.story[st.id];if(st.type==='story'&&!FOREST_STORY.has(st.id))st.cost*=LATE_COST_SCALE;}
   const eventState=()=>({progress:0,badges:[0,0,0],activeBonus:0,finished:false,round:1});
-  const fresh=(now=0)=>({version:3,balanceVersion:BALANCE.version,mana:0,totalEarned:0,lifetimeEarned:0,memory:0,memoryClaimed:0,era:1,producers:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),training:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),research:[],collection:[],story:{completed:[],history:[],legacy:false},events:Object.fromEntries(THEMES.map(t=>[t.id,eventState()])),lastSaved:finite(now)});
+  const fresh=(now=0)=>({version:3,balanceVersion:BALANCE.version,mana:0,totalEarned:0,lifetimeEarned:0,memory:0,memoryClaimed:0,era:1,producers:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),training:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),research:[],collection:[],story:{completed:[],history:[],seenScenes:[],recapPending:false,legacy:false},events:Object.fromEntries(THEMES.map(t=>[t.id,eventState()])),lastSaved:finite(now)});
   const hasStep=(s,id)=>s.story.completed.includes(id),producerById=id=>typeof id==='string'?PRODUCERS.find(p=>p.id===id):id;
   const prerequisites=n=>[n?.requires].filter(Boolean),missingResearch=(s,n)=>prerequisites(n).filter(id=>!s.research.includes(id));
   function syncStory(s){
@@ -128,7 +128,8 @@
     s.era=Math.max(1,Math.floor(finite(raw.era,1)));s.producers=Object.fromEntries(PRODUCERS.map(p=>[p.id,Math.min(BALANCE.maxLevel,Math.floor(finite(raw.producers?.[p.id])))]));
     s.training=Object.fromEntries(PRODUCERS.map(p=>[p.id,Math.min(BALANCE.maxTraining,Math.floor(finite(raw.training?.[p.id])))]));
     s.research=[...new Set((raw.research||[]).filter(id=>NODES.some(n=>n.id===id)))];s.collection=[...new Set((raw.collection||[]).filter(id=>CREATURES.some(c=>c.id===id)))];
-    s.story={completed:[...new Set((raw.story?.completed||[]).filter(id=>STORY_STEPS.some(st=>st.id===id)))],history:[...new Set((raw.story?.history||[]).filter(id=>NODES.some(n=>n.id===id)))],legacy:false};
+    const hasSceneHistory=Array.isArray(raw.story?.seenScenes);
+    s.story={completed:[...new Set((raw.story?.completed||[]).filter(id=>STORY_STEPS.some(st=>st.id===id)))],history:[...new Set((raw.story?.history||[]).filter(id=>NODES.some(n=>n.id===id)))],seenScenes:hasSceneHistory?[...new Set(raw.story.seenScenes.filter(id=>typeof id==='string'))]:[],recapPending:hasSceneHistory&&!!raw.story.recapPending,legacy:false};
     s.events=Object.fromEntries(THEMES.map(t=>{const e=raw.events?.[t.id]||{};return[t.id,{...e,progress:Math.min(9,Math.floor(finite(e.progress))),badges:[0,1,2].map(i=>Math.floor(finite(e.badges?.[i]))),activeBonus:finite(e.activeBonus),finished:!!e.finished,round:Math.max(1,Math.floor(finite(e.round,1)))}];}));
     if(raw.eventSchedule&&typeof raw.eventSchedule==='object')s.eventSchedule={...raw.eventSchedule};
     if((raw.balanceVersion||1)<2&&s.story.completed.includes('firstEra')){
@@ -139,7 +140,9 @@
       for(const [id,producer,level] of [['moss10','moss',10],['root10','roots',10],['ink10','inkwell',3],['orchard25','orchards',3]])
         if(s.producers[producer]>=level&&!s.story.completed.includes(id))s.story.completed.push(id);
     }
-    s.balanceVersion=BALANCE.version;return syncStory(s);
+    s.balanceVersion=BALANCE.version;syncStory(s);
+    if(!hasSceneHistory&&s.story.completed.length){s.story.seenScenes=['prologue',...s.story.completed];s.story.recapPending=true;}
+    return s;
   }
   function unlocks(s){return{producers:PRODUCERS.filter(p=>!p.unlock||hasStep(s,p.unlock)).map(p=>p.id),tree:hasStep(s,'mushrooms'),creatures:hasStep(s,'moth'),bulkBuy:hasStep(s,'moth'),training:hasStep(s,'moth'),portals:hasStep(s,'firstEra'),rebirth:hasStep(s,'tower')};}
   const visibleProducers=s=>PRODUCERS.filter(p=>unlocks(s).producers.includes(p.id));
@@ -148,7 +151,7 @@
   const producerMultiplier=(s,id)=>producerHelpers(s,id).reduce((v,c)=>v*c.multiplier,1);
   const STORY_BOOSTS={moss:'moss10',roots:'root10',inkwell:'ink10',orchards:'orchard25',forges:'lanterns'};
   const storyBoost=(s,id)=>hasStep(s,STORY_BOOSTS[id])?2:1;
-  const levelMultiplier=()=>1;
+  const levelMultiplier=level=>level<10?1:level<25?2:2**(1+Math.floor(level/25));
   const factor=s=>1+s.memory*BALANCE.memoryPerUnit;
   const producerUnitIncome=(s,id)=>{const p=producerById(id);return p?finite(p.rate*factor(s)*(s.research.includes('breath')?1.25:1)*producerMultiplier(s,p)*storyBoost(s,p.id)*levelMultiplier(s.producers[p.id])*BALANCE.trainingMultiplier**(s.training?.[p.id]||0),BALANCE.maxNumber):0;};
   const producerIncome=(s,id)=>{const p=producerById(id);return p?finite((s.producers[p.id]||0)*producerUnitIncome(s,p)):0;};
@@ -165,7 +168,7 @@
   function trainingQuote(s,id){const p=producerById(id),level=s.training?.[p?.id]||0,beforeIncome=p?producerIncome(s,p):0,afterIncome=finite(beforeIncome*BALANCE.trainingMultiplier,BALANCE.maxNumber),price=finite(Math.ceil(beforeIncome*BALANCE.trainingCostSeconds),BALANCE.maxNumber),available=!!p&&unlocks(s).training&&s.producers[p.id]>0&&level<BALANCE.maxTraining&&afterIncome>beforeIncome;
     return{level,cost:price,affordable:available&&s.mana>=price,available,beforeIncome,afterIncome,multiplier:BALANCE.trainingMultiplier};}
   function train(s,id){const q=trainingQuote(s,id);if(!q.affordable)return false;s.mana-=q.cost;s.training[id]++;return true;}
-  function nextMilestone(){return null;}
+  function nextMilestone(s,id){const p=producerById(id),level=p?s.producers[p.id]:0;if(!p||level>=BALANCE.maxLevel)return null;const next=level<10?10:level<25?25:Math.min(BALANCE.maxLevel,(Math.floor(level/25)+1)*25),prior=level<10?0:level<25?10:Math.floor(level/25)*25;return{level:next,currentLevel:level,remaining:next-level,multiplier:2,progress:(level-prior)/(next-prior)};}
   const researchCost=(s,n)=>finite(Math.ceil(n.cost*BALANCE.costScale*(s.story.history.includes(n.id)?BALANCE.knownResearchDiscount:1)));
   function researchStatus(s,id){const n=NODES.find(v=>v.id===id);if(!n)return{allowed:false,reason:'unknown',cost:0};const price=researchCost(s,n);
     if(s.research.includes(id))return{allowed:false,reason:'complete',cost:price};if(!unlocks(s).tree||(!s.story.history.includes(id)&&n.unlock&&!hasStep(s,n.unlock)))return{allowed:false,reason:'story',id:n.unlock,cost:price};
