@@ -105,3 +105,61 @@
 .sheet-emblem:has(.creature-portrait){overflow:hidden;padding:2px}
 .sheet-emblem .creature-portrait{width:100%;height:100%}
 @media(max-width:360px){.forest-allies{padding-inline:15px}.allies-grid{gap:6px}.ally span:last-child{font-size:8px}}
+
+/* Main play loop: next purchase, world, production, companions. */
+.goal{position:relative;top:auto;left:auto;right:auto;min-height:0;width:100%;border:0;border-bottom:1px solid #626747;border-radius:0;background:linear-gradient(135deg,#263728,#17251c);backdrop-filter:none;display:flex;flex-direction:column;align-items:stretch;gap:5px;padding:14px 20px 12px;text-align:left}
+.goal.ready{background:linear-gradient(135deg,#3b492b,#1c2e20)}
+.goal-kicker{font-size:9px;letter-spacing:1.2px;color:#d6bf85}
+.goal-name{font:22px/1.15 Georgia,serif;color:#f0e3c5}
+.goal-desc{font-size:11px;line-height:1.4;color:#bdc9b5}
+.goal-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px;font-size:11px;color:#aebba9}
+.goal-bottom b{font-size:14px;font-weight:600;color:#ead195;white-space:nowrap}
+.goal.ready .goal-bottom>span{color:#e9d3a0}
+.goal-meter{height:4px;width:100%;margin-top:3px;background:#101b15;border-radius:8px;overflow:hidden}
+.goal-meter i{display:block;height:100%;background:#cbb075;transition:width .25s}
+.world-scene,.world-scene.beginning{height:250px}
+.heart,.beginning .heart{top:40%;width:100px;height:100px;transform:translate(-50%,-18%)}
+.heart>.icon{width:50px;height:50px}
+.tap-hint{top:105px}
+.scene-caption{top:13px}
+.scene-caption h2{font-size:24px}
+.scene-switch{top:14px;right:14px}
+.story-fragment{padding-block:12px}
+.growth-panel{padding-top:17px}
+.panel-heading{margin-bottom:8px}
+.producer-list{gap:7px}
+.producer{min-height:72px;padding:8px;gap:8px}
+.producer-info{display:flex;align-items:center;gap:9px;flex:1;min-width:0;background:transparent;text-align:left;padding:0;min-height:52px}
+.producer-emblem{width:44px;height:44px}
+.producer-copy{display:flex;flex-direction:column;gap:2px;min-width:0}
+.producer-copy strong{font:16px/1.15 Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.producer-copy small{font-size:10px;line-height:1.2;color:#b9c5b0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.producer-copy small:last-child{color:#d2bb82}
+.buy-button{flex:none;min-width:90px;max-width:100px;min-height:54px;padding:6px 8px;display:flex;flex-direction:column;gap:2px;border-color:#ac965f;background:#4a482b;color:#f5dfaa}
+.buy-button .buy-quantity{font-size:11px}
+.buy-button .buy-cost{font-size:12px;overflow-wrap:anywhere;line-height:1.15}
+.forest-allies{padding:14px 20px 17px;border-top:1px solid #394d39}
+.allies-heading{align-items:center;margin-bottom:10px}
+.allies-heading h3{font-size:21px}
+.allies-heading h3 b{font:12px system-ui;color:#c6b883}
+.allies-heading button{min-height:44px;display:flex;align-items:center;gap:4px;padding:0 5px;background:none;color:#dfc98c;font-size:12px}
+.allies-heading button .icon{width:16px;height:16px}
+.allies-track{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 1px 5px;scrollbar-width:thin}
+.allies-track .ally{width:74px;min-width:74px;scroll-snap-align:start;padding:4px 4px 6px}
+.allies-track .ally .creature-portrait{width:62px;height:62px}
+.allies-track .ally span:last-child{min-height:24px;font-size:9px}
+.next-reward{display:none}
+@media(max-width:700px){.world-scene,.world-scene.beginning{height:240px}.goal{padding-inline:17px}.goal-name{font-size:20px}.growth-panel{padding-top:14px}}
+@media(max-width:360px){.world-scene,.world-scene.beginning{height:220px}.goal{padding:11px 15px}.goal-name{font-size:19px}.goal-desc{font-size:10px}.heart,.beginning .heart{width:87px;height:87px}.tap-hint{top:96px}.scene-caption h2{font-size:21px}.producer{gap:5px}.producer-info{gap:5px}.producer-copy strong{font-size:14px}.producer-copy small{font-size:9px}.buy-button{min-width:78px;max-width:82px}.forest-allies{padding-inline:15px}}
+
+
+.goal-desc{font-size:12px;line-height:1.45}
+.goal-bottom{font-size:12px}
+.producer{min-height:82px}
+.producer-copy strong{font-size:17px}
+.producer-copy small{font-size:11px}
+.buy-button{min-height:58px}
+.buy-button .buy-quantity{font-size:11px;font-weight:600}
+.buy-button .buy-cost:after{content:" ✧";color:#ead094}
+.buy-button:disabled{color:#d5c8a0;background:#303b2c;border-color:#59674e}
+@media(max-width:360px){.goal-desc{font-size:11px}.producer-copy strong{font-size:15px}.producer-copy small{font-size:10px}.buy-button .buy-quantity{font-size:10px}}

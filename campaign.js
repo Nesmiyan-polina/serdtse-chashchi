@@ -1,12 +1,12 @@
 (function(root,factory){const api=factory();if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.ThicketCampaign=api;})(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
   const SAVE_KEY='thicket-campaign-90d-v1',INTRO_KEY='thicket-campaign-intro-v1';
-  const BALANCE={version:2,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
+  const BALANCE={version:5,offlineCapSeconds:48*3600,levelGrowth:1.17,memoryPerUnit:.15,knownResearchDiscount:.03,knownSourceDiscount:.03,trainingMultiplier:1.005,trainingCostSeconds:120,maxLevel:10000,maxTraining:100000,maxNumber:1e240,costScale:1};
   const finite=(v,fallback=0)=>Number.isFinite(v)?Math.min(BALANCE.maxNumber,Math.max(0,v)):fallback;
   const PRODUCERS=[
-    {id:'moss',name:'Светящийся мох',desc:'Первый свет под корнями',base:15,rate:1,icon:'leaf',unlock:null},
-    {id:'roots',name:'Живые корни',desc:'Магия глубин',base:45,rate:4,icon:'tree',unlock:'moss'},
-    {id:'mushrooms',name:'Грибной круг',desc:'Память лесной почвы',base:100,rate:10,icon:'mushroom',unlock:'rootsource'},
+    {id:'moss',name:'Светящийся мох',desc:'Первый свет под корнями',base:15,rate:5,icon:'leaf',unlock:null},
+    {id:'roots',name:'Живые корни',desc:'Магия глубин',base:45,rate:20,icon:'tree',unlock:'moss'},
+    {id:'mushrooms',name:'Грибной круг',desc:'Память лесной почвы',base:100,rate:50,icon:'mushroom',unlock:'rootsource'},
     {id:'inkwell',name:'Живые чернила',desc:'Знания возвращаются на страницы',base:4e6,rate:500,icon:'book',unlock:'archive'},
     {id:'cauldron',name:'Лунный котёл',desc:'Алхимия спокойного огня',base:4e7,rate:4000,icon:'flask',unlock:'ink10'},
     {id:'crystals',name:'Кристальный сад',desc:'Свет, выращенный в башне',base:6e8,rate:35000,icon:'spark',unlock:'alembic'},
@@ -57,10 +57,10 @@
     step('rootsource','Лес','Оживить корни','producer',{target:'roots',after:'Под землёй проступает старая тропа.'}),
     step('mushrooms','Лес','Пробудить грибной круг','producer',{target:'mushrooms',after:'Три источника связаны. Открылось Древо открытий.'}),
     step('moth','Лес','Позвать лунного мотылька','research',{target:'light',after:'«Ты вернулась», — шепчет мотылёк. Он помнит тебя, хотя ты видишь его впервые.'}),
-    step('moss10','Лес','Вырастить светящуюся поляну','producer',{target:'moss',level:10,after:'Мох разрастается в поляну. Десятый уровень удваивает его силу.'}),
+    step('moss10','Лес','Расширить светящуюся поляну','story',{cost:250,text:'Купи усиление за ману: светящийся мох будет собирать вдвое больше.',after:'Мох разрастается, и под землёй открывается новый путь.'}),
     step('rootcall','Лес','Услышать зов корней','research',{target:'roots',after:'Сердце отвечает на каждое прикосновение сильнее.'}),
     step('spores','Лес','Найти моховика','research',{target:'spores',after:'Моховик показывает тропу, спрятанную под грибными шляпками.'}),
-    step('root10','Лес','Укрепить подземную тропу','producer',{target:'roots',level:10,after:'Корни удерживают путь, который раньше исчезал в тумане.'}),
+    step('root10','Лес','Укрепить подземную тропу','story',{cost:50000,text:'Купи усиление за ману: живые корни будут собирать вдвое больше.',after:'Корни удерживают путь даже в густом тумане.'}),
     step('breath','Лес','Вернуть лесу дыхание','research',{target:'breath',after:'Все источники начинают работать в одном ритме.'}),
     step('firstspring','Лес','Собрать янтарную росу','research',{target:'dew',after:'Улитка хранит каплю рассвета. Значит, когда-то утро существовало.'}),
     step('owl','Лес','Встретить чернильную сову','research',{target:'owl',after:'Сова показывает тропу сквозь ночной лес.'}),
@@ -71,7 +71,7 @@
     step('firstEra','Башня','Пройти сквозь смену эпохи','rebirth',{after:'Ты снова в лесу. Встреченные существа узнают тебя. Открылись порталы.'}),
     step('archive','Башня','Восстановить архив','story',{cost:1e7,research:['tower'],after:'В архиве найден чертёж Маяка рассвета и первые живые чернила.'}),
     step('inkwell','Башня','Пробудить живые чернила','producer',{target:'inkwell',after:'На пустых страницах появляются имена жителей королевства.'}),
-    step('ink10','Башня','Собрать первую книгу','producer',{target:'inkwell',level:3,after:'Третий уровень живых чернил завершает книгу. В ней найден рецепт безопасного огня.'}),
+    step('ink10','Башня','Собрать первую книгу','story',{cost:1e12,text:'Купи книгу за ману: живые чернила будут собирать вдвое больше.',after:'Книга завершена. В ней найден рецепт безопасного огня.'}),
     step('cauldron','Башня','Зажечь лунный котёл','producer',{target:'cauldron',after:'Тихий огонь даёт башне новый источник маны.'}),
     step('alembic','Башня','Собрать световой перегонник','story',{cost:1e9,research:['salamander'],after:'В перегоннике появляется семя кристального сада.'}),
     step('crystals','Башня','Вырастить кристальный сад','producer',{target:'crystals',after:'Кристаллы хранят свет без огня.'}),
@@ -83,7 +83,7 @@
     step('otter','Королевство','Вернуть отражения звёзд','research',{target:'otter',after:'Звёздная выдра собирает потерянные созвездия.'}),
     step('orchards','Королевство','Пробудить сумеречные сады','producer',{target:'orchards',after:'В садах впервые раскрываются бутоны.'}),
     step('raven','Королевство','Собрать серебряные семена','research',{target:'raven',after:'Ворон разносит семена по пустым дворам.'}),
-    step('orchard25','Королевство','Вырастить сад королевства','producer',{target:'orchards',level:3,after:'Третий уровень садов возвращает жизнь в опустевшие дворы.'}),
+    step('orchard25','Королевство','Вырастить сад королевства','story',{cost:1e27,text:'Купи восстановление сада за ману: сумеречные сады будут собирать вдвое больше.',after:'Сад возвращает жизнь в опустевшие дворы.'}),
     step('springs','Королевство','Восстановить водные пути','story',{cost:1e13,research:['raven'],after:'Вода приводит в движение колёса кузниц рассвета.'}),
     step('forges','Королевство','Разжечь кузницы рассвета','producer',{target:'forges',after:'Мастера начинают собирать каркас маяка.'}),
     step('dragon','Королевство','Позвать медного дракона','research',{target:'dragon',after:'Дракон выдувает первую линзу из чистого огня.'}),
@@ -91,7 +91,7 @@
     step('unicorn','Королевство','Принять клятву источника','research',{target:'unicorn',after:'Единорог обещает удержать поток света на границе эпох.'}),
     step('council','Маяк','Собрать хранителей','story',{cost:6e14,research:['unicorn'],collection:CREATURES.map(c=>c.id),after:'Пятнадцать спутников готовы помочь. Каждый принёс часть будущего утра.'}),
     step('foundation','Маяк','Поднять основание маяка','story',{cost:1e15,research:['tower','guardian'],after:'Лисица показывает место, моховик укрепляет землю. Основание выдерживает течение магии.'}),
-    step('lanterns','Маяк','Зажечь кольцо фонарей','story',{cost:2e15,levels:{forges:10},after:'Фонари удерживают свет вокруг башни маяка.'}),
+    step('lanterns','Маяк','Зажечь кольцо фонарей','story',{cost:2e15,text:'Купи фонари за ману: кузницы будут собирать вдвое больше.',after:'Фонари удерживают свет вокруг башни маяка.'}),
     step('prism','Маяк','Собрать рассветную призму','story',{cost:4e15,research:['crane','dragon'],after:'Призма собирает девять потоков маны в один луч.'}),
     step('oath','Маяк','Связать свет с памятью','story',{cost:7e15,memory:1,research:['unicorn'],after:'Память сохраняет луч на границе эпох. Остался последний шаг.'}),
     step('dawn','Маяк','Зажечь Маяк рассвета','story',{cost:1e16,research:['guardian','unicorn'],after:'Впервые ночь заканчивается. Мотылёк садится тебе на ладонь: «Теперь мы можем идти дальше». Ты вернула миру рассвет.'})
@@ -104,10 +104,10 @@
     story:{archive:163618342976,alembic:93692122698603780,observatory:6.069402259937787e22,road:2.0155176785107594e24,springs:7.698611677189128e28,council:6.302722740605403e33,foundation:4.93026644161494e34,lanterns:5.8401972499347186e35,prism:3.6812705148841573e36,oath:1.0211291723185451e37,dawn:1.0601051097340625e38}
   };
   // Later chapters are priced for repeated eras; the first forest cycle keeps its own curve.
-  const LATE_COST_SCALE=.08,EARLY_NODES=new Set(['light','roots','spores','breath','dew','owl','salamander','bat','guardian','tower']);
+  const LATE_COST_SCALE=.03,FOREST_STORY=new Set(['moss10','root10']),EARLY_NODES=new Set(['light','roots','spores','breath','dew','owl','salamander','bat','guardian','tower']);
   for(const p of PRODUCERS){if(TUNING.producers[p.id])Object.assign(p,TUNING.producers[p.id]);if(['inkwell','cauldron','crystals','well','orchards','forges'].includes(p.id))p.base*=LATE_COST_SCALE;}
   for(const n of NODES){if(TUNING.nodes[n.id])n.cost=TUNING.nodes[n.id];if(!EARLY_NODES.has(n.id))n.cost*=LATE_COST_SCALE;n.chapter=STORY_STEPS.find(st=>st.target===n.id&&st.type==='research')?.chapter||'Лес';}
-  for(const st of STORY_STEPS){if(TUNING.story[st.id])st.cost=TUNING.story[st.id];if(st.type==='story')st.cost*=LATE_COST_SCALE;}
+  for(const st of STORY_STEPS){if(TUNING.story[st.id])st.cost=TUNING.story[st.id];if(st.type==='story'&&!FOREST_STORY.has(st.id))st.cost*=LATE_COST_SCALE;}
   const eventState=()=>({progress:0,badges:[0,0,0],activeBonus:0,finished:false,round:1});
   const fresh=(now=0)=>({version:3,balanceVersion:BALANCE.version,mana:0,totalEarned:0,lifetimeEarned:0,memory:0,memoryClaimed:0,era:1,producers:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),training:Object.fromEntries(PRODUCERS.map(p=>[p.id,0])),research:[],collection:[],story:{completed:[],history:[],legacy:false},events:Object.fromEntries(THEMES.map(t=>[t.id,eventState()])),lastSaved:finite(now)});
   const hasStep=(s,id)=>s.story.completed.includes(id),producerById=id=>typeof id==='string'?PRODUCERS.find(p=>p.id===id):id;
@@ -135,6 +135,10 @@
       for(const id of ['owl','salamander','bat','guardian'])if(!s.story.completed.includes(id))s.story.completed.push(id);
       for(const id of ['owl','salamander','bat','deer'])if(!s.collection.includes(id))s.collection.push(id);
     }
+    if((raw.balanceVersion||1)<3){
+      for(const [id,producer,level] of [['moss10','moss',10],['root10','roots',10],['ink10','inkwell',3],['orchard25','orchards',3]])
+        if(s.producers[producer]>=level&&!s.story.completed.includes(id))s.story.completed.push(id);
+    }
     s.balanceVersion=BALANCE.version;return syncStory(s);
   }
   function unlocks(s){return{producers:PRODUCERS.filter(p=>!p.unlock||hasStep(s,p.unlock)).map(p=>p.id),tree:hasStep(s,'mushrooms'),creatures:hasStep(s,'moth'),bulkBuy:hasStep(s,'moth'),training:hasStep(s,'moth'),portals:hasStep(s,'firstEra'),rebirth:hasStep(s,'tower')};}
@@ -142,24 +146,26 @@
   const visibleResearch=s=>unlocks(s).tree?NODES.filter(n=>s.research.includes(n.id)||((!n.unlock||hasStep(s,n.unlock))&&!missingResearch(s,n).length)||s.story.history.includes(n.id)):[];
   const creatureActive=(s,c)=>s.research.includes(NODES.find(n=>n.creature===c.id)?.id),producerHelpers=(s,id)=>CREATURES.filter(c=>c.producer===producerById(id)?.id&&creatureActive(s,c));
   const producerMultiplier=(s,id)=>producerHelpers(s,id).reduce((v,c)=>v*c.multiplier,1);
-  const levelThresholds=[10,25,...Array.from({length:399},(_,i)=>(i+2)*25)];
-  const levelMultiplier=level=>level<10?1:level<25?2:2**(1+Math.floor(level/25));
+  const STORY_BOOSTS={moss:'moss10',roots:'root10',inkwell:'ink10',orchards:'orchard25',forges:'lanterns'};
+  const storyBoost=(s,id)=>hasStep(s,STORY_BOOSTS[id])?2:1;
+  const levelMultiplier=()=>1;
   const factor=s=>1+s.memory*BALANCE.memoryPerUnit;
-  const producerUnitIncome=(s,id)=>{const p=producerById(id);return p?finite(p.rate*factor(s)*(s.research.includes('breath')?1.25:1)*producerMultiplier(s,p)*levelMultiplier(s.producers[p.id])*BALANCE.trainingMultiplier**(s.training?.[p.id]||0),BALANCE.maxNumber):0;};
+  const producerUnitIncome=(s,id)=>{const p=producerById(id);return p?finite(p.rate*factor(s)*(s.research.includes('breath')?1.25:1)*producerMultiplier(s,p)*storyBoost(s,p.id)*levelMultiplier(s.producers[p.id])*BALANCE.trainingMultiplier**(s.training?.[p.id]||0),BALANCE.maxNumber):0;};
   const producerIncome=(s,id)=>{const p=producerById(id);return p?finite((s.producers[p.id]||0)*producerUnitIncome(s,p)):0;};
   const income=s=>finite(PRODUCERS.reduce((v,p)=>v+producerIncome(s,p),0));
   const tapValue=s=>finite((1+Number(s.research.includes('roots')))*factor(s));
-  const cost=(s,id)=>{const p=producerById(id);return p?finite(Math.ceil(p.base*BALANCE.levelGrowth**s.producers[p.id]*BALANCE.costScale),BALANCE.maxNumber):BALANCE.maxNumber;};
+  const sourceCost=(s,p,level)=>{const known=s.era>1&&level===0&&STORY_STEPS.some(st=>st.type==='producer'&&st.target===p.id&&hasStep(s,st.id));return finite(Math.ceil(p.base*BALANCE.levelGrowth**level*BALANCE.costScale*(known?BALANCE.knownSourceDiscount:1)),BALANCE.maxNumber);};
+  const cost=(s,id)=>{const p=producerById(id);return p?sourceCost(s,p,s.producers[p.id]):BALANCE.maxNumber;};
   function quotePurchase(s,id,mode=1){const p=producerById(id);if(!p||!unlocks(s).producers.includes(p.id))return{quantity:0,cost:0,affordable:false,beforeIncome:0,afterIncome:0,nextLevel:0};
     const level=s.producers[p.id],limit=mode==='max'?BALANCE.maxLevel-level:Math.min(mode===10?10:1,BALANCE.maxLevel-level);let sum=0,quantity=0;
-    for(let i=0;i<limit;i++){const item=finite(Math.ceil(p.base*BALANCE.levelGrowth**(level+i)*BALANCE.costScale),BALANCE.maxNumber);if(mode==='max'&&sum+item>s.mana)break;sum=finite(sum+item);quantity++;}
+    for(let i=0;i<limit;i++){const item=sourceCost(s,p,level+i);if(mode==='max'&&sum+item>s.mana)break;sum=finite(sum+item);quantity++;}
     const copy={...s,producers:{...s.producers,[p.id]:level+quantity}};return{quantity,cost:sum,affordable:quantity>0&&s.mana>=sum,beforeIncome:producerIncome(s,p),afterIncome:producerIncome(copy,p),nextLevel:level+quantity};
   }
   function buy(s,id,mode=1){const q=quotePurchase(s,id,mode);if(!q.affordable)return false;s.mana-=q.cost;s.producers[id]=q.nextLevel;syncStory(s);return true;}
   function trainingQuote(s,id){const p=producerById(id),level=s.training?.[p?.id]||0,beforeIncome=p?producerIncome(s,p):0,afterIncome=finite(beforeIncome*BALANCE.trainingMultiplier,BALANCE.maxNumber),price=finite(Math.ceil(beforeIncome*BALANCE.trainingCostSeconds),BALANCE.maxNumber),available=!!p&&unlocks(s).training&&s.producers[p.id]>0&&level<BALANCE.maxTraining&&afterIncome>beforeIncome;
     return{level,cost:price,affordable:available&&s.mana>=price,available,beforeIncome,afterIncome,multiplier:BALANCE.trainingMultiplier};}
   function train(s,id){const q=trainingQuote(s,id);if(!q.affordable)return false;s.mana-=q.cost;s.training[id]++;return true;}
-  function nextMilestone(s,id){const p=producerById(id),level=p?s.producers[p.id]:0,next=levelThresholds.find(v=>v>level)||BALANCE.maxLevel,prior=[0,...levelThresholds].filter(v=>v<=level).at(-1);return{level:next,currentLevel:level,remaining:Math.max(0,next-level),multiplier:2,progress:next===prior?1:(level-prior)/(next-prior)};}
+  function nextMilestone(){return null;}
   const researchCost=(s,n)=>finite(Math.ceil(n.cost*BALANCE.costScale*(s.story.history.includes(n.id)?BALANCE.knownResearchDiscount:1)));
   function researchStatus(s,id){const n=NODES.find(v=>v.id===id);if(!n)return{allowed:false,reason:'unknown',cost:0};const price=researchCost(s,n);
     if(s.research.includes(id))return{allowed:false,reason:'complete',cost:price};if(!unlocks(s).tree||(!s.story.history.includes(id)&&n.unlock&&!hasStep(s,n.unlock)))return{allowed:false,reason:'story',id:n.unlock,cost:price};
@@ -173,15 +179,14 @@
   function researchGoal(s,id){const n=NODES.find(v=>v.id===id),missing=missingResearch(s,n);return missing.length?researchGoal(s,missing[0]):{type:'research',id};}
   function storyActionStatus(s,id){const st=STORY_STEPS.find(v=>v.id===id),index=STORY_STEPS.indexOf(st);if(!st||st.type!=='story')return{allowed:false,reason:'unknown',cost:0};const price=finite(st.cost*BALANCE.costScale);
     if(hasStep(s,id))return{allowed:false,reason:'complete',cost:price};const earlier=STORY_STEPS.slice(0,index).find(v=>!hasStep(s,v.id));if(earlier)return{allowed:false,reason:'story',id:earlier.id,cost:price};
-    const missing=(st.research||[]).find(r=>!s.research.includes(r));if(missing)return{allowed:false,reason:'research',id:missing,cost:price};const level=Object.entries(st.levels||{}).find(([p,n])=>s.producers[p]<n);if(level)return{allowed:false,reason:'producer',id:level[0],level:level[1],cost:price};
-    const creature=(st.collection||[]).find(c=>!s.collection.includes(c));if(creature)return{allowed:false,reason:'research',id:NODES.find(n=>n.creature===creature).id,cost:price};if(s.memory<(st.memory||0))return{allowed:false,reason:'rebirth',cost:price};return{allowed:s.mana>=price,reason:s.mana>=price?'ready':'mana',cost:price};
+    return{allowed:s.mana>=price,reason:s.mana>=price?'ready':'mana',cost:price};
   }
   function storyAction(s,id){const st=storyActionStatus(s,id);if(!st.allowed)return false;s.mana-=st.cost;s.story.completed.push(id);syncStory(s);return true;}
   function nextGoal(s){const st=STORY_STEPS.find(v=>!hasStep(s,v.id));if(!st)return{type:'complete',id:'dawn',step:'dawn'};let goal;
     if(st.type==='producer')goal={type:'producer',id:st.target,level:st.level||1};
     if(st.type==='research')goal=researchGoal(s,(st.targets||[st.target]).find(id=>!s.research.includes(id))||st.target);
     if(st.type==='rebirth')goal=canRebirth(s)?{type:'rebirth'}:researchGoal(s,'tower');
-    if(st.type==='story'){const status=storyActionStatus(s,st.id);goal=status.reason==='research'?researchGoal(s,status.id):status.reason==='producer'?{type:'producer',id:status.id,level:status.level}:status.reason==='rebirth'?{type:'rebirth'}:{type:'story',id:st.id};}
+    if(st.type==='story')goal={type:'story',id:st.id};
     if(!income(s)&&(goal.type!=='producer'||goal.id!=='moss'))goal={type:'producer',id:'moss',level:1,rebuilding:true};return{...goal,step:st.id};
   }
   function nextReward(s){const st=STORY_STEPS.find(v=>!hasStep(s,v.id))||STORY_STEPS.at(-1),n=NODES.find(n=>n.id===st.target&&st.type==='research'),c=CREATURES.find(c=>c.id===n?.creature),newSource=PRODUCERS.find(p=>p.unlock===st.id);let description=st.text;
